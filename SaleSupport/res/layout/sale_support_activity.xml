@@ -18,6 +18,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:contentDescription="@null"
+            android:onClick="onClickImage"
             android:src="@drawable/ic_menu" />
     </RelativeLayout>
 
@@ -28,6 +29,13 @@
         android:layout_above="@+id/llMenuBottom"
         android:layout_below="@+id/rlMenuTop"
         android:background="@drawable/bg1" >
+
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="40sp" />
     </FrameLayout>
 
     <LinearLayout
@@ -45,6 +53,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:contentDescription="@null"
+            android:onClick="onClickImage"
             android:src="@drawable/ic_camera2" />
 
         <ImageView
@@ -54,6 +63,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:contentDescription="@null"
+            android:onClick="onClickImage"
             android:src="@drawable/ic_text_size" />
 
         <ImageView
@@ -63,6 +73,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:contentDescription="@null"
+            android:onClick="onClickImage"
             android:src="@drawable/ic_share2" />
 
         <ImageView
@@ -72,6 +83,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:contentDescription="@null"
+            android:onClick="onClickImage"
             android:src="@drawable/ic_icon3" />
 
         <ImageView
@@ -81,6 +93,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:contentDescription="@null"
+            android:onClick="onClickImage"
             android:src="@drawable/ic_text" />
     </LinearLayout>
 
