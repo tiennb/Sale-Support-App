@@ -1,11 +1,10 @@
 package com.androidapp.salesupport;
 
 import java.io.IOException;
+
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -16,20 +15,24 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.ViewGroup.LayoutParams;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.DragEvent;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.DragShadowBuilder;
+import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,7 @@ public class SaleSupportActivity extends Activity {
 	ImageView imgTakePhoto, imgTextFormat, imgShare, imgColors, imgInputText;
 	FrameLayout flPhoto;
 	TextView tvText;
+	private PopupWindow mPopupMenu, mPopupInputText;
 
 	final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
 	Uri imageUri = null;
@@ -66,9 +70,6 @@ public class SaleSupportActivity extends Activity {
 
 		tvText.setOnTouchListener(new ChoiceTouchListener());
 
-		// set drag listeners
-		// tvText.setOnDragListener(new ChoiceDragListener());
-
 	}
 
 	/**
@@ -90,13 +91,62 @@ public class SaleSupportActivity extends Activity {
 
 			break;
 		case R.id.imgInputText:
-			tvText.setText("Test");
+			// tvText.setText("Test");
+
+			// if (!mPopupInputText.isShowing()) {
+			initPopupMenu(v);
+
+			// } else {
+			// mPopupInputText.dismiss();
+			// }
+
 			break;
 
 		default:
 			break;
 		}
 	}
+
+	/**********/
+	public void initPopupMenu(View v) {
+		LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+				.getSystemService(LAYOUT_INFLATER_SERVICE);
+		View popup = layoutInflater.inflate(R.layout.popup_input_text_layout,
+				null);
+
+		mPopupInputText = new PopupWindow(popup, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
+
+		final EditText etInputText = (EditText) popup
+				.findViewById(R.id.etInputText);
+		ImageView imgTickOK = (ImageView) popup.findViewById(R.id.imgTickOK);
+
+		mPopupInputText.setOutsideTouchable(true);
+		mPopupInputText.setFocusable(true);
+		mPopupInputText.update();
+
+		imgTickOK.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (!etInputText.getText().toString().isEmpty()) {
+					tvText.setText(etInputText.getText().toString());
+				}
+
+				mPopupInputText.dismiss();
+			}
+		});
+
+		mPopupInputText.setAnimationStyle(R.style.AnimationDeviceListPopup);
+		// // mPopupMenu.update();
+
+		// // mPopupDeviceList.showAsDropDown(v);
+		mPopupInputText.showAtLocation(v, Gravity.TOP, 10, 50);
+
+	}
+
+	/**********/
 
 	/**************/
 
@@ -105,38 +155,11 @@ public class SaleSupportActivity extends Activity {
 	 *
 	 */
 	private final class ChoiceTouchListener implements OnTouchListener {
-		private static final float MAX_X_MOVE = 70;
-		private static final float MAX_Y_MOVE = 70;
 
 		@SuppressLint("NewApi")
 		@Override
 		public boolean onTouch(View view, MotionEvent motionEvent) {
-			// if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-			//
-			// // FrameLayout.LayoutParams lLayoutParam =
-			// // (FrameLayout.LayoutParams) view
-			// // .getLayoutParams();
-			// // lLayoutParam.leftMargin = (int) motionEvent.getX();
-			// // lLayoutParam.topMargin = (int) motionEvent.getX();
-			// // flPhoto.updateViewLayout(view, lLayoutParam);
-			//
-			// if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-			//
-			// System.out.println("GetRawXY: " + motionEvent.getRawX()
-			// + " " + motionEvent.getRawX());
-			//
-			// final float x = motionEvent.getX();
-			// final float y = motionEvent.getY();
-			// final float dx = x - lastXAxis;
-			// final float dy = y - lastYAxis;
-			// xAxis += dx;
-			// yAxis += dy;
-			//
-			// view.setX(motionEvent.getRawX());
-			// view.setY(motionEvent.getRawY());
-			// }
-			//
-			// }
+
 			final int actionPeformed = motionEvent.getAction();
 			switch (actionPeformed) {
 			case MotionEvent.ACTION_DOWN: {
@@ -144,8 +167,7 @@ public class SaleSupportActivity extends Activity {
 				final float y = motionEvent.getY();
 				lastXAxis = x;
 				lastYAxis = y;
-				// xText.setText(Float.toString(lastXAxis));
-				// yText.setText(Float.toString(lastYAxis));
+
 				break;
 			}
 			case MotionEvent.ACTION_MOVE: {
@@ -155,12 +177,10 @@ public class SaleSupportActivity extends Activity {
 				final float dy = y - lastYAxis;
 				xAxis += dx;
 				yAxis += dy;
-				
-				 view.setX(xAxis);
-				 view.setY(yAxis);
-				
-				// moveX.setText(Float.toString(xAxis));
-				// moveY.setText(Float.toString(yAxis));
+
+				view.setX(xAxis);
+				view.setY(yAxis);
+
 				break;
 			}
 			}
